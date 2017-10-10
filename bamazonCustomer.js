@@ -21,7 +21,7 @@ function displayProducts() {
 function promptProductId() {
 	inquirer.prompt({
     	name: "id",
-    	type: "list",
+    	type: "input",
     	message: "What is the item_id of the product you would like to purchase? [Quit with Q]",
     	choices: [1,2,3,4,5,6,7,8,9,10]
     	})
@@ -36,17 +36,17 @@ function promptProductId() {
 }
 function promptProductQuantity() {
 	inquirer.prompt({
-    	name: "id",
-    	type: "list",
+    	name: "quantityInput",
+    	type: "input",
     	message: "How many would you like to order? [Quit with Q]"
     	})
     	.then(function(answer) {
-    		if (answer.id.trim().toLowerCase() === 'q') {
+    		if (answer.quantityInput.trim().toLowerCase() === 'q') {
     			mysql.endConnection();
     		}
     		else if (isNaN === false) {
-    			var productQuantity = answer.id.trim().parseInt();
-    			var newStockQuantity = stock_quantity - orderQuantity;
+    			var productQuantity = answer.quantityInput.trim().parseInt();
+    			var newStockQuantity = connection.table.stock_quantity - productQuantity;
     			var grabPrice = connection.query("SELECT price WHERE item_id IS answer.id");
     			updateStockQuantity();
     		}
@@ -58,18 +58,13 @@ function promptProductQuantity() {
 }
 function updateStockQuantity() {
 	connection.query("UPDATE products SET ? WHERE ?",
-    	[
-      		{
-        		stock_quantity: newStockQuantity
-      		},
-      		{
-        		item_id: id
-      		}
-    	],
-    function(err, res) {
-      console.log(res.affectedRows + " products updated!\n");
-      // Call deleteProduct AFTER the UPDATE completes
-      deleteProduct();
-    }
+    [
+      {
+        stock_quantity: newStockQuantity
+      },
+      {
+        item_id: id
+      }
+    ],
   );
 }
