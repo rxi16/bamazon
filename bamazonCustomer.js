@@ -3,7 +3,7 @@ var inquirer = require('inquirer');
 var mysql = require('mysql');
 
 var connection = mysql.createConnection({
-  host: "127.0.0.1",
+  host: "localhost",
   port: 3306,
   user: "root",
   password: "",
@@ -46,6 +46,7 @@ function promptProductQuantity() {
     		}
     		else if (isNaN === false) {
     			var productQuantity = answer.quantityInput.trim().parseInt();
+          // let newStockQuantity = "SELECT * FROM products WHERE item_id BETWEEN 1 AND 10";
     			var newStockQuantity = connection.table.stock_quantity - productQuantity;
     			var grabPrice = connection.query("SELECT price WHERE item_id IS answer.id");
     			updateStockQuantity();
